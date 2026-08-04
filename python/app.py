@@ -1,3 +1,4 @@
+from modules.position import live_position
 from modules.force import live_force
 import subprocess
 import sys
@@ -43,7 +44,7 @@ def main() -> None:
         if choice == "1":
             live_force()
         elif choice == "2":
-            run_script("position_relative.py")
+            live_position()
         elif choice == "3":
             run_script("live_plot.py")
         elif choice == "4":
