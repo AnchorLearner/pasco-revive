@@ -1,3 +1,4 @@
+from modules.logger import record_experiment
 from modules.plotting import live_plot
 from modules.position import live_position
 from modules.force import live_force
@@ -49,7 +50,7 @@ def main() -> None:
         elif choice == "3":
             live_plot()
         elif choice == "4":
-            run_script("motion_force_logger.py")
+            record_experiment()
         elif choice == "5":
             print("\nGoodbye!")
             break
