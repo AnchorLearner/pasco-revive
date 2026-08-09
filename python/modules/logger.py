@@ -3,15 +3,14 @@ import os
 import time
 from statistics import mean
 
-from pasco import PASCOBLEDevice
+from modules.connection import connect_cart
 
 
-TARGET_ID = "795-427"
 TARE_SAMPLES = 20
 
 
 def record_experiment() -> None:
-    cart = PASCOBLEDevice()
+    cart = None
 
     data_dir = os.path.join(
         os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
@@ -26,25 +25,10 @@ def record_experiment() -> None:
     )
 
     try:
-        print("\nScanning for the Smart Cart...")
-        devices = cart.scan()
+        cart = connect_cart()
 
-        selected = next(
-            (
-                device
-                for device in devices
-                if TARGET_ID in (device.name or "")
-            ),
-            None,
-        )
-
-        if selected is None:
-            print("\nSmart Cart not found.")
-            print("Turn it on and confirm that the Bluetooth light is blinking.")
+        if cart is None:
             return
-
-        print(f"Connecting to {selected.name}...")
-        cart.connect(selected)
 
         print("Stabilizing position sensor...")
 
@@ -140,12 +124,16 @@ def record_experiment() -> None:
 
     except Exception as error:
         print(f"\nCould not record experiment: {type(error).__name__}")
-        print("Make sure the cart is on and no other Bluetooth program is using it.")
+        print(
+            "Make sure the cart is on and "
+            "no other Bluetooth program is using it."
+        )
 
     finally:
-        try:
-            cart.disconnect()
-        except Exception:
-            pass
+        if cart is not None:
+            try:
+                cart.disconnect()
+            except Exception:
+                pass
 
         print("Disconnected.")

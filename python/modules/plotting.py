@@ -1,35 +1,18 @@
 import time
 
 import matplotlib.pyplot as plt
-from pasco import PASCOBLEDevice
 
-
-TARGET_ID = "795-427"
+from modules.connection import connect_cart
 
 
 def live_plot() -> None:
-    cart = PASCOBLEDevice()
+    cart = None
 
     try:
-        print("\nScanning for the Smart Cart...")
-        devices = cart.scan()
+        cart = connect_cart()
 
-        selected = next(
-            (
-                device
-                for device in devices
-                if TARGET_ID in (device.name or "")
-            ),
-            None,
-        )
-
-        if selected is None:
-            print("\nSmart Cart not found.")
-            print("Turn it on and confirm that the Bluetooth light is blinking.")
+        if cart is None:
             return
-
-        print(f"Connecting to {selected.name}...")
-        cart.connect(selected)
 
         print("Stabilizing position sensor...")
 
@@ -87,10 +70,11 @@ def live_plot() -> None:
         )
 
     finally:
-        try:
-            cart.disconnect()
-        except Exception:
-            pass
+        if cart is not None:
+            try:
+                cart.disconnect()
+            except Exception:
+                pass
 
         plt.ioff()
         plt.close("all")

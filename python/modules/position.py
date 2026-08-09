@@ -1,34 +1,16 @@
 import time
 
-from pasco import PASCOBLEDevice
-
-
-TARGET_ID = "795-427"
+from modules.connection import connect_cart
 
 
 def live_position() -> None:
-    cart = PASCOBLEDevice()
+    cart = None
 
     try:
-        print("\nScanning for the Smart Cart...")
-        devices = cart.scan()
+        cart = connect_cart()
 
-        selected = next(
-            (
-                device
-                for device in devices
-                if TARGET_ID in (device.name or "")
-            ),
-            None,
-        )
-
-        if selected is None:
-            print("\nSmart Cart not found.")
-            print("Turn it on and confirm that the Bluetooth light is blinking.")
+        if cart is None:
             return
-
-        print(f"Connecting to {selected.name}...")
-        cart.connect(selected)
 
         print("Stabilizing position sensor...")
 
@@ -58,12 +40,16 @@ def live_position() -> None:
 
     except Exception as error:
         print(f"\nCould not read the Smart Cart: {type(error).__name__}")
-        print("Make sure the cart is on and no other Bluetooth program is using it.")
+        print(
+            "Make sure the cart is on and "
+            "no other Bluetooth program is using it."
+        )
 
     finally:
-        try:
-            cart.disconnect()
-        except Exception:
-            pass
+        if cart is not None:
+            try:
+                cart.disconnect()
+            except Exception:
+                pass
 
         print("Disconnected.")
