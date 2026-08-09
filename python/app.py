@@ -1,3 +1,4 @@
+from modules.plotting import live_plot
 from modules.position import live_position
 from modules.force import live_force
 import subprocess
@@ -46,7 +47,7 @@ def main() -> None:
         elif choice == "2":
             live_position()
         elif choice == "3":
-            run_script("live_plot.py")
+            live_plot()
         elif choice == "4":
             run_script("motion_force_logger.py")
         elif choice == "5":
