@@ -3,7 +3,7 @@ import os
 import time
 from statistics import mean
 
-from modules.connection import connect_cart
+from modules.connection import connect_cart, disconnect_cart
 
 
 TARE_SAMPLES = 20
@@ -130,10 +130,5 @@ def record_experiment() -> None:
         )
 
     finally:
-        if cart is not None:
-            try:
-                cart.disconnect()
-            except Exception:
-                pass
-
+        disconnect_cart(cart)
         print("Disconnected.")

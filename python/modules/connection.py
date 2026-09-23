@@ -128,3 +128,25 @@ def connect_cart():
     print(f"Connected to {selected.name}")
 
     return cart
+
+
+def disconnect_cart(cart) -> None:
+    """
+    Safely disconnect a Smart Cart without allowing
+    shutdown errors to crash the main application.
+    """
+
+    if cart is None:
+        return
+
+    try:
+        cart.disconnect()
+
+    except KeyboardInterrupt:
+        pass
+
+    except Exception as error:
+        print(
+            f"Warning: disconnect did not finish cleanly: "
+            f"{type(error).__name__}"
+        )

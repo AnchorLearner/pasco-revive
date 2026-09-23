@@ -2,7 +2,7 @@ import time
 
 import matplotlib.pyplot as plt
 
-from modules.connection import connect_cart
+from modules.connection import connect_cart, disconnect_cart
 
 
 def live_plot() -> None:
@@ -70,13 +70,10 @@ def live_plot() -> None:
         )
 
     finally:
-        if cart is not None:
-            try:
-                cart.disconnect()
-            except Exception:
-                pass
-
         plt.ioff()
         plt.close("all")
 
+        disconnect_cart(cart)
+
+        print("Disconnected.")
         print("Disconnected.")

@@ -1,7 +1,6 @@
 import time
 
-from modules.connection import connect_cart
-
+from modules.connection import connect_cart, disconnect_cart
 
 def live_position() -> None:
     cart = None
@@ -46,10 +45,5 @@ def live_position() -> None:
         )
 
     finally:
-        if cart is not None:
-            try:
-                cart.disconnect()
-            except Exception:
-                pass
-
+        disconnect_cart(cart)
         print("Disconnected.")
